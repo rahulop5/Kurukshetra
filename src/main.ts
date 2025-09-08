@@ -352,7 +352,7 @@ async function commandHandler(input: string) {
 
       try {
         const response = await fetch(
-          `${BASE_URL}/challenges/me/todo`,
+          `http://api-production-6183.up.railway.app/challenges/me/todo`,
           {
             method: "GET",
             credentials: "include",
@@ -423,7 +423,7 @@ async function commandHandler(input: string) {
 
       try {
         const response = await fetch(
-          `${BASE_URL}/challenges/me/done`,
+          `http://api-production-6183.up.railway.app/challenges/me/done`,
           {
             method: "GET",
             credentials: "include",
@@ -492,7 +492,7 @@ async function commandHandler(input: string) {
 
       try {
         const response = await fetch(
-          `${BASE_URL}/teams/leaderboard`,
+          `http://api-production-6183.up.railway.app/teams/leaderboard`,
           {
             method: "GET",
             credentials: "include",
@@ -565,7 +565,7 @@ async function commandHandler(input: string) {
       }
 
       try {
-        const response = await fetch(`${BASE_URL}/`, {
+        const response = await fetch(`http://api-production-6183.up.railway.app/`, {
           method: "GET",
           credentials: "include",
           headers: {
@@ -608,7 +608,7 @@ async function commandHandler(input: string) {
 
       try {
         const response = await fetch(
-          `${BASE_URL}/auth/verify-email/init`,
+          `http://api-production-6183.up.railway.app/auth/verify-email/init`,
           {
             method: "POST",
             credentials: "include",
@@ -660,7 +660,7 @@ async function commandHandler(input: string) {
   }
 
   try {
-    const response = await fetch(`${BASE_URL}/teams/my`, {
+    const response = await fetch(`http://api-production-6183.up.railway.app/teams/my`, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -725,7 +725,7 @@ async function commandHandler(input: string) {
       }
 
       try {
-        const response = await fetch(`${BASE_URL}/auth/me`, {
+        const response = await fetch(`http://api-production-6183.up.railway.app/auth/me`, {
           method: "GET",
           credentials: "include",
           headers: {
@@ -977,7 +977,7 @@ async function commandHandler(input: string) {
     case "logout":
       try {
         const response = await fetch(
-          `${BASE_URL}/auth/logout`,
+          `http://api-production-6183.up.railway.app/auth/logout`,
           {
             method: "DELETE",
             credentials: "include",
@@ -1177,7 +1177,7 @@ function passwordHandler() {
       console.log(EMAIL_INPUT.value);
       console.log(PASSWORD_INPUT.value);
 
-      fetch(`${BASE_URL}/auth/login`, {
+      fetch(`http://api-production-6183.up.railway.app/auth/login`, {
         method: "POST",
         credentials: 'include',
 
@@ -1222,7 +1222,7 @@ function passwordHandler() {
       console.log(PASSWORD_INPUT.value);
       console.log(NAME_INPUT.value);
 
-      fetch(`${BASE_URL}/auth/register`, {
+      fetch(`http://api-production-6183.up.railway.app/auth/register`, {
         method: "POST",
         credentials: 'include',
         headers: {
@@ -1261,7 +1261,7 @@ function passwordHandler() {
           ]);
         });
 
-      // fetch(`${BASE_URL}/auth/verify-email/init`, {
+      // fetch(`http://api-production-6183.up.railway.app/auth/verify-email/init`, {
       //   method: 'POST',
       //   headers: {
       //       'Content-Type': 'application/json'
@@ -1401,7 +1401,7 @@ function keyHandler() {
       USERINPUT.focus();
     }, 200);
 
-    fetch(`${BASE_URL}/challenges/submit`, {
+    fetch(`http://api-production-6183.up.railway.app/challenges/submit`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -1527,7 +1527,7 @@ function teamHandler() {
       USERINPUT.focus();
     }, 200);
 
-    fetch(`${BASE_URL}/teams`, {
+    fetch(`http://api-production-6183.up.railway.app/teams`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -1602,7 +1602,7 @@ function tokenHandler() {
     }, 200);
 
     let token =
-      `${BASE_URL}/auth/verify-email/${TOKEN_INPUT.value}`;
+      `http://api-production-6183.up.railway.app/auth/verify-email/${TOKEN_INPUT.value}`;
 
     fetch(token, {
       method: "POST",
@@ -1666,9 +1666,9 @@ function tidHandler() {
       USERINPUT.focus();
     }, 200);
 
-    //let token = `${BASE_URL}/auth/verify-email/${TOKEN_INPUT.value}`;
+    //let token = `http://api-production-6183.up.railway.app/auth/verify-email/${TOKEN_INPUT.value}`;
 
-    fetch(`${BASE_URL}/teams/join`, {
+    fetch(`http://api-production-6183.up.railway.app/teams/join`, {
       method: "POST",
       credentials: "include",
       headers: {
