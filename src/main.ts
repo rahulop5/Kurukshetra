@@ -1,13 +1,13 @@
 import command from "../config.json" assert { type: "json" };
-import { ABOUT } from "./commands/about";
+// import { ABOUT } from "./commands/about";
 import { BANNER } from "./commands/banner";
 import { DEFAULT } from "./commands/default";
 import { HELP } from "./commands/help";
-import { PROJECTS } from "./commands/projects";
+// import { PROJECTS } from "./commands/projects";
 //import { createWhoami } from "./commands/whoami";
-import { ACHIEVEMENTS } from "./commands/achievements";
-import { Hackme } from "./commands/hackme";
-import { Neko } from "./commands/neko";
+// import { ACHIEVEMENTS } from "./commands/achievements";
+// import { Hackme } from "./commands/hackme";
+// import { Neko } from "./commands/neko";
 
 import { RULE } from "./KurukshetraCommands/rules";
 import { LORE } from "./KurukshetraCommands/lore";
@@ -84,14 +84,14 @@ const COMMANDS = [
 ];
 const HISTORY: string[] = [];
 //const SUDO_PASSWORD = command.password;
-const GIT_LINK = command.gitLink;
-const LINKEDIN_LINK = command.linkedinLink;
-const INSTAGRAM_LINK = command.instagramLink;
-const GCLOUD_LINK = command.gcloudLink;
-const GPROFILE_LINK = command.gprofileLink;
-const UNITY_LINK = command.unityLink;
-const DISCORD_LINK = command.discordLink;
-const EMAIL_LINK = command.emailLink;
+// const GIT_LINK = command.gitLink;
+// const LINKEDIN_LINK = command.linkedinLink;
+// const INSTAGRAM_LINK = command.instagramLink;
+// const GCLOUD_LINK = command.gcloudLink;
+// const GPROFILE_LINK = command.gprofileLink;
+// const UNITY_LINK = command.unityLink;
+// const DISCORD_LINK = command.discordLink;
+// const EMAIL_LINK = command.emailLink;
 
 const scrollToBottom = () => {
   const MAIN = document.getElementById("main");
