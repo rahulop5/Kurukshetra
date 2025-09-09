@@ -655,10 +655,10 @@ async function commandHandler(input: string) {
     //   }
     //   break;
 
-    //   interface TeamMember {
-    //     _id: string;
-    //     fullName: string;
-    //   }
+      interface TeamMember {
+        _id: string;
+        fullName: string;
+      }
 
     case "team":
       if (bareMode) {
