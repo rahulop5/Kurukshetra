@@ -354,7 +354,7 @@ async function commandHandler(input: string) {
 
       try {
         const response = await fetch(
-          `https://api-production-6183.up.railway.app/challenges/me/todo`,
+          `http://localhost:3000/challenges/me/todo`,
           {
             method: "GET",
             credentials: "include",
@@ -424,7 +424,7 @@ async function commandHandler(input: string) {
 
       try {
         const response = await fetch(
-          `https://api-production-6183.up.railway.app/challenges/me/done`,
+          `http://localhost:3000/challenges/me/done`,
           {
             method: "GET",
             credentials: "include",
@@ -493,7 +493,7 @@ async function commandHandler(input: string) {
 
       try {
         const response = await fetch(
-          `https://api-production-6183.up.railway.app/teams/leaderboard`,
+          `http://localhost:3000/teams/leaderboard`,
           {
             method: "GET",
             credentials: "include",
@@ -567,7 +567,7 @@ async function commandHandler(input: string) {
 
       try {
         const response = await fetch(
-          `https://api-production-6183.up.railway.app/`,
+          `http://localhost:3000/`,
           {
             method: "GET",
             credentials: "include",
@@ -604,58 +604,61 @@ async function commandHandler(input: string) {
       }
       break;
 
-    case "send-mail":
-      if (bareMode) {
-        writeLines([`${command.username}`, "<br>"]);
-        break;
-      }
+    // case "send-mail":
+    //   if (bareMode) {
+    //     writeLines([`${command.username}`, "<br>"]);
+    //     break;
+    //   }
 
-      try {
-        const response = await fetch(
-          `https://api-production-6183.up.railway.app/auth/verify-email/init`,
-          {
-            method: "POST",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              //accept: "application/json",
-            },
-            body: JSON.stringify({}),
-          }
-        );
+    //   try {
+    //     console.log(EMAIL_INPUT)
+    //     const response = await fetch(
+    //       `http://localhost:3000/auth/verify-email/init`,
+    //       {
+    //         method: "POST",
+    //         credentials: "include",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //           // "accept": "application/json",
+    //         },
+    //         // body: JSON.stringify({
+              
+    //         // }),
+    //       }
+    //     );
 
-        if (!response.ok) {
-          const errorBody = await response.json();
-          throw new Error(
-            `${response.status}: ${errorBody.message || "Unknown error"}`
-          );
-        } else {
-          writeLines(["Mail sent !! now use the verify command", "<br>"]);
-        }
-      } catch (error: unknown) {
-        console.error("Error:", error);
+    //     if (!response.ok) {
+    //       const errorBody = await response.json();
+    //       throw new Error(
+    //         `${response.status}: ${errorBody.message || "Unknown error"}`
+    //       );
+    //     } else {
+    //       writeLines(["Mail sent !! now use the verify command", "<br>"]);
+    //     }
+    //   } catch (error: unknown) {
+    //     console.error("Error:", error);
 
-        if (error && typeof error === "object" && "message" in error) {
-          const apiError = error as {
-            message: string;
-            error?: string;
-            statusCode?: number;
-          };
-          writeLines([
-            `Error ${apiError.statusCode || ""}: ${apiError.message}`,
-            apiError.error ? `(${apiError.error})` : "",
-            "<br>",
-          ]);
-        } else {
-          writeLines(["An unexpected error occurred", "<br>"]);
-        }
-      }
-      break;
+    //     if (error && typeof error === "object" && "message" in error) {
+    //       const apiError = error as {
+    //         message: string;
+    //         error?: string;
+    //         statusCode?: number;
+    //       };
+    //       writeLines([
+    //         `Error ${apiError.statusCode || ""}: ${apiError.message}`,
+    //         apiError.error ? `(${apiError.error})` : "",
+    //         "<br>",
+    //       ]);
+    //     } else {
+    //       writeLines(["An unexpected error occurred", "<br>"]);
+    //     }
+    //   }
+    //   break;
 
-      interface TeamMember {
-        _id: string;
-        fullName: string;
-      }
+    //   interface TeamMember {
+    //     _id: string;
+    //     fullName: string;
+    //   }
 
     case "team":
       if (bareMode) {
@@ -665,7 +668,7 @@ async function commandHandler(input: string) {
 
       try {
         const response = await fetch(
-          `https://api-production-6183.up.railway.app/teams/my`,
+          `http://localhost:3000/teams/my`,
           {
             method: "GET",
             credentials: "include",
@@ -732,7 +735,7 @@ async function commandHandler(input: string) {
 
       try {
         const response = await fetch(
-          `https://api-production-6183.up.railway.app/auth/me`,
+          `http://localhost:3000/auth/me`,
           {
             method: "GET",
             credentials: "include",
@@ -946,18 +949,18 @@ async function commandHandler(input: string) {
 
       break;
 
-    case "verify":
-      if (!TOKEN) return;
-      isTokenInput = true;
-      USERINPUT.disabled = true;
+    // case "verify":
+    //   if (!TOKEN) return;
+    //   isTokenInput = true;
+    //   USERINPUT.disabled = true;
 
-      if (INPUT_HIDDEN) INPUT_HIDDEN.style.display = "none";
-      TOKEN.style.display = "block";
-      setTimeout(() => {
-        TOKEN_INPUT.focus();
-      }, 100);
+    //   if (INPUT_HIDDEN) INPUT_HIDDEN.style.display = "none";
+    //   TOKEN.style.display = "block";
+    //   setTimeout(() => {
+    //     TOKEN_INPUT.focus();
+    //   }, 100);
 
-      break;
+    //   break;
 
     case "submit":
       if (!CHALLENGEID) return;
@@ -988,7 +991,7 @@ async function commandHandler(input: string) {
     case "logout":
       try {
         const response = await fetch(
-          `https://api-production-6183.up.railway.app/auth/logout`,
+          `http://localhost:3000/auth/logout`,
           {
             method: "DELETE",
             credentials: "include",
@@ -1192,7 +1195,7 @@ function passwordHandler() {
       console.log(EMAIL_INPUT.value);
       console.log(PASSWORD_INPUT.value);
 
-      fetch(`https://api-production-6183.up.railway.app/auth/login`, {
+      fetch(`http://localhost:3000/auth/login`, {
         method: "POST",
         credentials: "include",
 
@@ -1237,7 +1240,7 @@ function passwordHandler() {
       console.log(PASSWORD_INPUT.value);
       console.log(NAME_INPUT.value);
 
-      fetch(`https://api-production-6183.up.railway.app/auth/register`, {
+      fetch(`http://localhost:3000/auth/register`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -1261,8 +1264,7 @@ function passwordHandler() {
           console.log("Success:", data);
           writeLines([
             "<br>",
-            "Registered, now use the send-mail command o get verification mail",
-            "Try <span class='command'>'send-mail'</span> Then, <span class='command'>'verify'</span> ",
+            "Registered successfully Try the challenge command",
             "<br>",
           ]);
         })
@@ -1276,7 +1278,7 @@ function passwordHandler() {
           ]);
         });
 
-      // fetch(`https://api-production-6183.up.railway.app/auth/verify-email/init`, {
+      // fetch(`http://localhost:3000/auth/verify-email/init`, {
       //   method: 'POST',
       //   headers: {
       //       'Content-Type': 'application/json'
@@ -1416,7 +1418,7 @@ function keyHandler() {
       USERINPUT.focus();
     }, 200);
 
-    fetch(`https://api-production-6183.up.railway.app/challenges/submit`, {
+    fetch(`http://localhost:3000/challenges/submit`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -1542,7 +1544,7 @@ function teamHandler() {
       USERINPUT.focus();
     }, 200);
 
-    fetch(`https://api-production-6183.up.railway.app/teams`, {
+    fetch(`http://localhost:3000/teams`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -1616,7 +1618,7 @@ function tokenHandler() {
       USERINPUT.focus();
     }, 200);
 
-    let token = `https://api-production-6183.up.railway.app/auth/verify-email/${TOKEN_INPUT.value}`;
+    let token = `http://localhost:3000/auth/verify-email/${TOKEN_INPUT.value}`;
 
     fetch(token, {
       method: "POST",
@@ -1680,9 +1682,9 @@ function tidHandler() {
       USERINPUT.focus();
     }, 200);
 
-    //let token = `https://api-production-6183.up.railway.app/auth/verify-email/${TOKEN_INPUT.value}`;
+    //let token = `http://localhost:3000/auth/verify-email/${TOKEN_INPUT.value}`;
 
-    fetch(`https://api-production-6183.up.railway.app/teams/join`, {
+    fetch(`http://localhost:3000/teams/join`, {
       method: "POST",
       credentials: "include",
       headers: {
