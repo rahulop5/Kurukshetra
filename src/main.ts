@@ -344,6 +344,8 @@ async function commandHandler(input: string) {
       }
       writeLines(HELP);
       break;
+
+
     case "challenge":
       if (bareMode) {
         writeLines([`${command.username}`, "<br>"]);
@@ -359,7 +361,6 @@ async function commandHandler(input: string) {
             headers: {
               "Content-Type": "application/json",
               //accept: "application/json",
-              
             },
           }
         );
@@ -565,14 +566,17 @@ async function commandHandler(input: string) {
       }
 
       try {
-        const response = await fetch(`https://api-production-6183.up.railway.app/`, {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            //accept: "application/json",
-          },
-        });
+        const response = await fetch(
+          `https://api-production-6183.up.railway.app/`,
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              //accept: "application/json",
+            },
+          }
+        );
 
         if (!response.ok) {
           const errorBody = await response.json();
@@ -653,71 +657,73 @@ async function commandHandler(input: string) {
         fullName: string;
       }
 
-      case "team":
-  if (bareMode) {
-    writeLines([`${command.username}`, "<br>"]);
-    break;
-  }
+    case "team":
+      if (bareMode) {
+        writeLines([`${command.username}`, "<br>"]);
+        break;
+      }
 
-  try {
-    const response = await fetch(`https://api-production-6183.up.railway.app/teams/my`, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+      try {
+        const response = await fetch(
+          `https://api-production-6183.up.railway.app/teams/my`,
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-    if (!response.ok) {
-      const errorBody = await response.json();
-      throw new Error(
-        `${response.status}: ${errorBody.message || "Unknown error"}`
-      );
-    }
+        if (!response.ok) {
+          const errorBody = await response.json();
+          throw new Error(
+            `${response.status}: ${errorBody.message || "Unknown error"}`
+          );
+        }
 
-    const teamData = await response.json();
+        const teamData = await response.json();
 
-    // Create array for all output lines
-    const outputLines = [
-      `Team name: ${teamData.name}`,
-      `Team score: ${teamData.score}`,
-      `Team UG: ${teamData.ug}`,
-      `Team join code: ${teamData.joinCode}`,
-      `Team lead name: ${teamData.lead.fullName}`,
-      "",  // Empty line before members list
-      "Team members:"
-    ];
+        // Create array for all output lines
+        const outputLines = [
+          `Team name: ${teamData.name}`,
+          `Team score: ${teamData.score}`,
+          `Team UG: ${teamData.ug}`,
+          `Team join code: ${teamData.joinCode}`,
+          `Team lead name: ${teamData.lead.fullName}`,
+          "", // Empty line before members list
+          "Team members:",
+        ];
 
-    // Add team members
-    teamData.members.forEach((member: TeamMember) => {
-      outputLines.push(`- ${member.fullName}`);
-    });
+        // Add team members
+        teamData.members.forEach((member: TeamMember) => {
+          outputLines.push(`- ${member.fullName}`);
+        });
 
-    // Add final line break
-    outputLines.push("<br>");
+        // Add final line break
+        outputLines.push("<br>");
 
-    // Write all lines at once
-    writeLines(outputLines);
+        // Write all lines at once
+        writeLines(outputLines);
+      } catch (error: unknown) {
+        console.error("Error:", error);
 
-  } catch (error: unknown) {
-    console.error("Error:", error);
-
-    if (error && typeof error === "object" && "message" in error) {
-      const apiError = error as {
-        message: string;
-        error?: string;
-        statusCode?: number;
-      };
-      writeLines([
-        `Error ${apiError.statusCode || ""}: ${apiError.message}`,
-        apiError.error ? `(${apiError.error})` : "",
-        "<br>",
-      ]);
-    } else {
-      writeLines(["An unexpected error occurred", "<br>"]);
-    }
-  }
-  break;
+        if (error && typeof error === "object" && "message" in error) {
+          const apiError = error as {
+            message: string;
+            error?: string;
+            statusCode?: number;
+          };
+          writeLines([
+            `Error ${apiError.statusCode || ""}: ${apiError.message}`,
+            apiError.error ? `(${apiError.error})` : "",
+            "<br>",
+          ]);
+        } else {
+          writeLines(["An unexpected error occurred", "<br>"]);
+        }
+      }
+      break;
     case "me":
       if (bareMode) {
         writeLines([`${command.username}`, "<br>"]);
@@ -725,14 +731,17 @@ async function commandHandler(input: string) {
       }
 
       try {
-        const response = await fetch(`https://api-production-6183.up.railway.app/auth/me`, {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            //accept: "application/json",
-          },
-        });
+        const response = await fetch(
+          `https://api-production-6183.up.railway.app/auth/me`,
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              //accept: "application/json",
+            },
+          }
+        );
 
         if (!response.ok) {
           const errorBody = await response.json();
@@ -772,13 +781,13 @@ async function commandHandler(input: string) {
       }
       break;
 
-    case "about":
-      if (bareMode) {
-        writeLines(["Nothing to see here.", "<br>"]);
-        break;
-      }
-      writeLines(ABOUT);
-      break;
+    // case "about":
+    //   if (bareMode) {
+    //     writeLines(["Nothing to see here.", "<br>"]);
+    //     break;
+    //   }
+    //   writeLines(ABOUT);
+    //   break;
     case "rules":
       if (bareMode) {
         writeLines(["Nothing to see here.", "<br>"]);
@@ -794,99 +803,99 @@ async function commandHandler(input: string) {
       writeLines(LORE);
       break;
 
-    case "projects":
-      if (bareMode) {
-        writeLines(["I don't want you to break the other projects.", "<br>"]);
-        break;
-      }
-      writeLines(PROJECTS);
-      break;
-    case "achievements":
-      if (bareMode) {
-        writeLines(["I don't want you to break the other things.", "<br>"]);
-        break;
-      }
-      writeLines(ACHIEVEMENTS);
-      break;
-    case "s/github":
-      writeLines(["Redirecting to github.com...", "<br>"]);
-      setTimeout(() => {
-        window.open(GIT_LINK, "_blank");
-      }, 500);
-      break;
-    case "hackme":
-      if (bareMode) {
-        writeLines(["Nothing to see here.", "<br>"]);
-        break;
-      }
-      writeLines(Hackme);
-      break;
-    case "neko":
-      if (bareMode) {
-        writeLines(["Nothing to see here.", "<br>"]);
-        break;
-      }
-      writeLines(Neko);
-      break;
-    case "s/linkedin":
-      writeLines(["Redirecting to linkedin...", "<br>"]);
-      setTimeout(() => {
-        window.open(LINKEDIN_LINK, "_blank");
-      }, 500);
-      break;
-    case "s/discord":
-      writeLines(["Redirecting to discord...", "<br>"]);
-      setTimeout(() => {
-        window.open(DISCORD_LINK, "_blank");
-      }, 500);
-      break;
-    case "s/instagram":
-      writeLines(["Redirecting to instagram...", "<br>"]);
-      setTimeout(() => {
-        window.open(INSTAGRAM_LINK, "_blank");
-      }, 500);
-      break;
-    case "s/gcloud":
-      writeLines(["Redirecting to google cloud profile...", "<br>"]);
-      setTimeout(() => {
-        window.open(GCLOUD_LINK, "_blank");
-      }, 500);
-      break;
-    case "s/gdeveloper":
-      writeLines(["Redirecting to google developer profile...", "<br>"]);
-      setTimeout(() => {
-        window.open(GPROFILE_LINK, "_blank");
-      }, 500);
-      break;
-    case "s/unity":
-      writeLines(["Redirecting to unity learn profile...", "<br>"]);
-      setTimeout(() => {
-        window.open(UNITY_LINK, "_blank");
-      }, 500);
-      break;
+    // case "projects":
+    //   if (bareMode) {
+    //     writeLines(["I don't want you to break the other projects.", "<br>"]);
+    //     break;
+    //   }
+    // //   writeLines(PROJECTS);
+    // //   break;
+    // case "achievements":
+    //   if (bareMode) {
+    //     writeLines(["I don't want you to break the other things.", "<br>"]);
+    //     break;
+    //   }
+    //   writeLines(ACHIEVEMENTS);
+    //   break;
+    // case "s/github":
+    //   writeLines(["Redirecting to github.com...", "<br>"]);
+    //   setTimeout(() => {
+    //     window.open(GIT_LINK, "_blank");
+    //   }, 500);
+    //   break;
+    // case "hackme":
+    //   if (bareMode) {
+    //     writeLines(["Nothing to see here.", "<br>"]);
+    //     break;
+    //   }
+    //   writeLines(Hackme);
+    //   break;
+    // case "neko":
+    //   if (bareMode) {
+    //     writeLines(["Nothing to see here.", "<br>"]);
+    //     break;
+    //   }
+    //   writeLines(Neko);
+    //   break;
+    // case "s/linkedin":
+    //   writeLines(["Redirecting to linkedin...", "<br>"]);
+    //   setTimeout(() => {
+    //     window.open(LINKEDIN_LINK, "_blank");
+    //   }, 500);
+    //   break;
+    // case "s/discord":
+    //   writeLines(["Redirecting to discord...", "<br>"]);
+    //   setTimeout(() => {
+    //     window.open(DISCORD_LINK, "_blank");
+    //   }, 500);
+    //   break;
+    // case "s/instagram":
+    //   writeLines(["Redirecting to instagram...", "<br>"]);
+    //   setTimeout(() => {
+    //     window.open(INSTAGRAM_LINK, "_blank");
+    //   }, 500);
+    //   break;
+    // case "s/gcloud":
+    //   writeLines(["Redirecting to google cloud profile...", "<br>"]);
+    //   setTimeout(() => {
+    //     window.open(GCLOUD_LINK, "_blank");
+    //   }, 500);
+    //   break;
+    // case "s/gdeveloper":
+    //   writeLines(["Redirecting to google developer profile...", "<br>"]);
+    //   setTimeout(() => {
+    //     window.open(GPROFILE_LINK, "_blank");
+    //   }, 500);
+    //   break;
+    // case "s/unity":
+    //   writeLines(["Redirecting to unity learn profile...", "<br>"]);
+    //   setTimeout(() => {
+    //     window.open(UNITY_LINK, "_blank");
+    //   }, 500);
+    //   break;
 
-    case "s/email":
-      writeLines(["Redirecting to email...", "<br>"]);
-      setTimeout(() => {
-        window.open(EMAIL_LINK, "_blank");
-      }, 500);
-      break;
+    // case "s/email":
+    //   writeLines(["Redirecting to email...", "<br>"]);
+    //   setTimeout(() => {
+    //     window.open(EMAIL_LINK, "_blank");
+    //   }, 500);
+    //   break;
 
-    case "rm -rf":
-      if (bareMode) {
-        writeLines(["don't try again.", "<br>"]);
-        break;
-      }
+    // case "rm -rf":
+    //   if (bareMode) {
+    //     writeLines(["don't try again.", "<br>"]);
+    //     break;
+    //   }
 
-      if (isSudo) {
-        writeLines([
-          "Usage: <span class='command'>'rm -rf &lt;dir&gt;'</span>",
-          "<br>",
-        ]);
-      } else {
-        writeLines(["Permission not granted.", "<br>"]);
-      }
-      break;
+    //   if (isSudo) {
+    //     writeLines([
+    //       "Usage: <span class='command'>'rm -rf &lt;dir&gt;'</span>",
+    //       "<br>",
+    //     ]);
+    //   } else {
+    //     writeLines(["Permission not granted.", "<br>"]);
+    //   }
+    //   break;
 
     case "register":
       if (bareMode) {
@@ -904,6 +913,8 @@ async function commandHandler(input: string) {
       }, 100);
 
       break;
+
+
     case "login":
       if (bareMode) {
         writeLines(["no.", "<br>"]);
@@ -1007,36 +1018,40 @@ async function commandHandler(input: string) {
       }
       break;
 
-    case "sudo":
-      if (bareMode) {
-        writeLines(["no.", "<br>"]);
-        break;
-      }
-      if (!PASSWORD) return;
-      isPasswordInput = true;
-      USERINPUT.disabled = true;
+    // case "sudo":
+    //   if (bareMode) {
+    //     writeLines(["no.", "<br>"]);
+    //     break;
+    //   }
+    //   if (!PASSWORD) return;
+    //   isPasswordInput = true;
+    //   USERINPUT.disabled = true;
 
-      if (INPUT_HIDDEN) INPUT_HIDDEN.style.display = "none";
-      PASSWORD.style.display = "block";
-      setTimeout(() => {
-        PASSWORD_INPUT.focus();
-      }, 100);
+    //   if (INPUT_HIDDEN) INPUT_HIDDEN.style.display = "none";
+    //   PASSWORD.style.display = "block";
+    //   setTimeout(() => {
+    //     PASSWORD_INPUT.focus();
+    //   }, 100);
 
-      break;
-    case "p/insiiits":
-      break;
-    case "ls":
-      if (bareMode) {
-        writeLines(["", "<br>"]);
-        break;
-      }
+    //   break;
 
-      if (isSudo) {
-        writeLines(["src", "<br>"]);
-      } else {
-        writeLines(["Permission not granted.", "<br>"]);
-      }
-      break;
+    // case "p/insiiits":
+    //   break;
+
+    // case "ls":
+    //   if (bareMode) {
+    //     writeLines(["", "<br>"]);
+    //     break;
+    //   }
+
+    //   if (isSudo) {
+    //     writeLines(["src", "<br>"]);
+    //   } else {
+    //     writeLines(["Permission not granted.", "<br>"]);
+    //   }
+    //   break;
+
+
     default:
       if (input.startsWith("p/")) {
         break;
@@ -1179,7 +1194,7 @@ function passwordHandler() {
 
       fetch(`https://api-production-6183.up.railway.app/auth/login`, {
         method: "POST",
-        credentials: 'include',
+        credentials: "include",
 
         //credentials: 'include',
         headers: {
@@ -1224,7 +1239,7 @@ function passwordHandler() {
 
       fetch(`https://api-production-6183.up.railway.app/auth/register`, {
         method: "POST",
-        credentials: 'include',
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
           accept: "application/json",
@@ -1601,8 +1616,7 @@ function tokenHandler() {
       USERINPUT.focus();
     }, 200);
 
-    let token =
-      `https://api-production-6183.up.railway.app/auth/verify-email/${TOKEN_INPUT.value}`;
+    let token = `https://api-production-6183.up.railway.app/auth/verify-email/${TOKEN_INPUT.value}`;
 
     fetch(token, {
       method: "POST",
@@ -1659,7 +1673,7 @@ function tidHandler() {
 
     USERINPUT.disabled = false;
     INPUT_HIDDEN.style.display = "block";
-    TID.style.display = "none";  
+    TID.style.display = "none";
     isTidInput = false;
 
     setTimeout(() => {
