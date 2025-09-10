@@ -2,15 +2,16 @@ import command from "../config.json" assert { type: "json" };
 // import { ABOUT } from "./commands/about";
 import { BANNER } from "./commands/banner";
 import { DEFAULT } from "./commands/default";
-import { HELP } from "./commands/help";
 // import { PROJECTS } from "./commands/projects";
 //import { createWhoami } from "./commands/whoami";
 // import { ACHIEVEMENTS } from "./commands/achievements";
 // import { Hackme } from "./commands/hackme";
 // import { Neko } from "./commands/neko";
 
-import { RULE } from "./KurukshetraCommands/rules";
-import { LORE } from "./KurukshetraCommands/lore";
+//uncomment
+// import { RULE } from "./KurukshetraCommands/rules";
+// import { HELP } from "./commands/help";
+// import { LORE } from "./KurukshetraCommands/lore";
 
 // Get base URL from environment variables or use localhost as fallback
 //const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:7878';
