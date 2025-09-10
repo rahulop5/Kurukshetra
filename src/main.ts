@@ -322,308 +322,47 @@ async function commandHandler(input: string) {
     }
   }
   switch (input) {
-    case "clear":
-      setTimeout(() => {
-        if (!TERMINAL || !WRITELINESCOPY) return;
-        TERMINAL.innerHTML = "";
-        TERMINAL.appendChild(WRITELINESCOPY);
-        mutWriteLines = WRITELINESCOPY;
-      });
-      break;
-    case "banner":
-      if (bareMode) {
-        writeLines(["WebShell v1.0.0", "<br>"]);
-        break;
-      }
-      writeLines(BANNER);
-      break;
-    case "help":
-      if (bareMode) {
-        writeLines(["maybe restarting your browser will fix this.", "<br>"]);
-        break;
-      }
-      writeLines(HELP);
-      break;
+
+    // case "clear":
+    //   setTimeout(() => {
+    //     if (!TERMINAL || !WRITELINESCOPY) return;
+    //     TERMINAL.innerHTML = "";
+    //     TERMINAL.appendChild(WRITELINESCOPY);
+    //     mutWriteLines = WRITELINESCOPY;
+    //   });
+    //   break;
+    // case "banner":
+    //   if (bareMode) {
+    //     writeLines(["WebShell v1.0.0", "<br>"]);
+    //     break;
+    //   }
+    //   writeLines(BANNER);
+    //   break;
+    // case "help":
+    //   if (bareMode) {
+    //     writeLines(["maybe restarting your browser will fix this.", "<br>"]);
+    //     break;
+    //   }
+    //   writeLines(HELP);
+    //   break;
 
 
-    case "challenge":
-      if (bareMode) {
-        writeLines([`${command.username}`, "<br>"]);
-        break;
-      }
-
-      try {
-        const response = await fetch(
-          `https://api-production-6183.up.railway.app/challenges/me/todo`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              //accept: "application/json",
-            },
-          }
-        );
-
-        if (!response.ok) {
-          const errorBody = await response.json();
-          throw new Error(
-            `${response.status}: ${errorBody.message || "Unknown error"}`
-          );
-        }
-
-        const challengeData = await response.json();
-
-        writeLines([
-          `Challenge no. : ${challengeData.no}`,
-          "<br>",
-          `Current Challenge: ${challengeData.title}`,
-          "<br>",
-          `<div style="white-space: pre-wrap; word-wrap: break-word; max-width: 100%;">Summary: ${challengeData.summary}</div>`,
-          "<br>",
-          `Tags: ${challengeData.tags.join(", ")}`,
-          "<br>",
-          `<div style="white-space: pre-wrap; word-wrap: break-word; max-width: 100%;">Description: ${challengeData.description}</div>`,
-          "<br>",
-          `<div style="white-space: pre-wrap; word-wrap: break-word; max-width: 100%;
-          ">${
-            challengeData.hints.length > 0
-              ? `Hints: ${challengeData.hints
-                  .map(
-                    (hint: any, index: number) => `${index + 1}. ${hint.text}`
-                  )
-                  .join("; ")}`
-              : ""
-          }</div>`,
-        ]);
-      } catch (error: unknown) {
-        console.error("Error:", error);
-
-        if (error && typeof error === "object" && "message" in error) {
-          const apiError = error as {
-            message: string;
-            error?: string;
-            statusCode?: number;
-          };
-          writeLines([
-            `Error ${apiError.statusCode || ""}: ${apiError.message}`,
-            apiError.error ? `(${apiError.error})` : "",
-            "<br>",
-          ]);
-        } else {
-          writeLines(["An unexpected error occurred", "<br>"]);
-        }
-      }
-      break;
-
-    case "records":
-      if (bareMode) {
-        writeLines([`${command.username}`, "<br>"]);
-        break;
-      }
-
-      try {
-        const response = await fetch(
-          `https://api-production-6183.up.railway.app/challenges/me/done`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              //accept: "application/json",
-            },
-          }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw {
-            ...data,
-            status: response.status,
-          };
-        }
-
-        if (data.length === 0) {
-          writeLines(["No challenges completed yet.", "<br>"]);
-          break;
-        }
-
-        writeLines(["Completed Challenges:", "<br>"]);
-
-        // Loop through each challenge in the array
-        data.forEach((challenge: any) => {
-          writeLines([
-            `<div style="margin-left: 10px;">`,
-            `Challenge #${challenge.no}: ${challenge.title}`,
-            "<br>",
-            `<div style="white-space: pre-wrap; word-wrap: break-word; max-width: 100%; margin-left: 10px;">Summary: ${challenge.summary}</div>`,
-            "<br>",
-            `Tags: ${challenge.tags.join(", ")}`,
-            "<br>",
-            "<br>",
-            `</div>`,
-          ]);
-        });
-      } catch (error: unknown) {
-        console.error("Error:", error);
-
-        if (error && typeof error === "object" && "message" in error) {
-          const apiError = error as {
-            message: string;
-            error?: string;
-            statusCode?: number;
-          };
-          writeLines([
-            `Error ${apiError.statusCode || ""}: ${apiError.message}`,
-            apiError.error ? `(${apiError.error})` : "",
-            "<br>",
-          ]);
-        } else {
-          writeLines(["An unexpected error occurred", "<br>"]);
-        }
-      }
-      break;
-
-    case "leaderboard":
-      if (bareMode) {
-        writeLines([`${command.username}`, "<br>"]);
-        break;
-      }
-
-      try {
-        const response = await fetch(
-          `https://api-production-6183.up.railway.app/teams/leaderboard`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              //accept: "application/json",
-            },
-          }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw {
-            ...data,
-            status: response.status,
-          };
-        }
-
-        if (!Array.isArray(data) || data.length === 0) {
-          writeLines(["No teams on leaderboard yet.", "<br>"]);
-          break;
-        }
-
-        // Create an array to store all lines
-        const allLines = ["Leaderboard:", "<br>", "<br>"];
-
-        // Add each team's information to the lines array
-        data.forEach((team: any, index: number) => {
-          allLines.push(
-            `<div style="margin-left: 10px; margin-bottom: 10px;">`,
-            `#${index + 1}. Team ${team.name}`,
-            "<br>",
-            `<div style="margin-left: 20px;">`,
-            `Score: ${team.score}`,
-            "<br>",
-            `Captain: ${team.lead?.fullName || "Unknown"}`,
-            "<br>",
-            `</div>`,
-            `</div>`
-          );
-        });
-
-        // Make a single writeLines call with all the content
-        writeLines(allLines);
-      } catch (error: unknown) {
-        console.error("Error:", error);
-
-        if (error && typeof error === "object" && "message" in error) {
-          const apiError = error as {
-            message: string;
-            error?: string;
-            statusCode?: number;
-          };
-          writeLines([
-            `Error ${apiError.statusCode || ""}: ${apiError.message}`,
-            apiError.error ? `(${apiError.error})` : "",
-            "<br>",
-          ]);
-        } else {
-          writeLines(["An unexpected error occurred", "<br>"]);
-        }
-      }
-
-      break;
-    case "test":
-      if (bareMode) {
-        writeLines([`${command.username}`, "<br>"]);
-        break;
-      }
-
-      try {
-        const response = await fetch(
-          `https://api-production-6183.up.railway.app/`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              //accept: "application/json",
-            },
-          }
-        );
-
-        if (!response.ok) {
-          const errorBody = await response.json();
-          throw new Error(
-            `${response.status}: ${errorBody.message || "Unknown error"}`
-          );
-        }
-      } catch (error: unknown) {
-        console.error("Error:", error);
-
-        if (error && typeof error === "object" && "message" in error) {
-          const apiError = error as {
-            message: string;
-            error?: string;
-            statusCode?: number;
-          };
-          writeLines([
-            `Error ${apiError.statusCode || ""}: ${apiError.message}`,
-            apiError.error ? `(${apiError.error})` : "",
-            "<br>",
-          ]);
-        } else {
-          writeLines(["An unexpected error occurred", "<br>"]);
-        }
-      }
-      break;
-
-    // case "send-mail":
+    // case "challenge":
     //   if (bareMode) {
     //     writeLines([`${command.username}`, "<br>"]);
     //     break;
     //   }
 
     //   try {
-    //     console.log(EMAIL_INPUT)
     //     const response = await fetch(
-    //       `https://api-production-6183.up.railway.app/auth/verify-email/init`,
+    //       `https://api-production-6183.up.railway.app/challenges/me/todo`,
     //       {
-    //         method: "POST",
+    //         method: "GET",
     //         credentials: "include",
     //         headers: {
     //           "Content-Type": "application/json",
-    //           // "accept": "application/json",
+    //           //accept: "application/json",
     //         },
-    //         // body: JSON.stringify({
-              
-    //         // }),
     //       }
     //     );
 
@@ -632,8 +371,219 @@ async function commandHandler(input: string) {
     //       throw new Error(
     //         `${response.status}: ${errorBody.message || "Unknown error"}`
     //       );
+    //     }
+
+    //     const challengeData = await response.json();
+
+    //     writeLines([
+    //       `Challenge no. : ${challengeData.no}`,
+    //       "<br>",
+    //       `Current Challenge: ${challengeData.title}`,
+    //       "<br>",
+    //       `<div style="white-space: pre-wrap; word-wrap: break-word; max-width: 100%;">Summary: ${challengeData.summary}</div>`,
+    //       "<br>",
+    //       `Tags: ${challengeData.tags.join(", ")}`,
+    //       "<br>",
+    //       `<div style="white-space: pre-wrap; word-wrap: break-word; max-width: 100%;">Description: ${challengeData.description}</div>`,
+    //       "<br>",
+    //       `<div style="white-space: pre-wrap; word-wrap: break-word; max-width: 100%;
+    //       ">${
+    //         challengeData.hints.length > 0
+    //           ? `Hints: ${challengeData.hints
+    //               .map(
+    //                 (hint: any, index: number) => `${index + 1}. ${hint.text}`
+    //               )
+    //               .join("; ")}`
+    //           : ""
+    //       }</div>`,
+    //     ]);
+    //   } catch (error: unknown) {
+    //     console.error("Error:", error);
+
+    //     if (error && typeof error === "object" && "message" in error) {
+    //       const apiError = error as {
+    //         message: string;
+    //         error?: string;
+    //         statusCode?: number;
+    //       };
+    //       writeLines([
+    //         `Error ${apiError.statusCode || ""}: ${apiError.message}`,
+    //         apiError.error ? `(${apiError.error})` : "",
+    //         "<br>",
+    //       ]);
     //     } else {
-    //       writeLines(["Mail sent !! now use the verify command", "<br>"]);
+    //       writeLines(["An unexpected error occurred", "<br>"]);
+    //     }
+    //   }
+    //   break;
+
+    // case "records":
+    //   if (bareMode) {
+    //     writeLines([`${command.username}`, "<br>"]);
+    //     break;
+    //   }
+
+    //   try {
+    //     const response = await fetch(
+    //       `https://api-production-6183.up.railway.app/challenges/me/done`,
+    //       {
+    //         method: "GET",
+    //         credentials: "include",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //           //accept: "application/json",
+    //         },
+    //       }
+    //     );
+
+    //     const data = await response.json();
+
+    //     if (!response.ok) {
+    //       throw {
+    //         ...data,
+    //         status: response.status,
+    //       };
+    //     }
+
+    //     if (data.length === 0) {
+    //       writeLines(["No challenges completed yet.", "<br>"]);
+    //       break;
+    //     }
+
+    //     writeLines(["Completed Challenges:", "<br>"]);
+
+    //     // Loop through each challenge in the array
+    //     data.forEach((challenge: any) => {
+    //       writeLines([
+    //         `<div style="margin-left: 10px;">`,
+    //         `Challenge #${challenge.no}: ${challenge.title}`,
+    //         "<br>",
+    //         `<div style="white-space: pre-wrap; word-wrap: break-word; max-width: 100%; margin-left: 10px;">Summary: ${challenge.summary}</div>`,
+    //         "<br>",
+    //         `Tags: ${challenge.tags.join(", ")}`,
+    //         "<br>",
+    //         "<br>",
+    //         `</div>`,
+    //       ]);
+    //     });
+    //   } catch (error: unknown) {
+    //     console.error("Error:", error);
+
+    //     if (error && typeof error === "object" && "message" in error) {
+    //       const apiError = error as {
+    //         message: string;
+    //         error?: string;
+    //         statusCode?: number;
+    //       };
+    //       writeLines([
+    //         `Error ${apiError.statusCode || ""}: ${apiError.message}`,
+    //         apiError.error ? `(${apiError.error})` : "",
+    //         "<br>",
+    //       ]);
+    //     } else {
+    //       writeLines(["An unexpected error occurred", "<br>"]);
+    //     }
+    //   }
+    //   break;
+
+    // case "leaderboard":
+    //   if (bareMode) {
+    //     writeLines([`${command.username}`, "<br>"]);
+    //     break;
+    //   }
+
+    //   try {
+    //     const response = await fetch(
+    //       `https://api-production-6183.up.railway.app/teams/leaderboard`,
+    //       {
+    //         method: "GET",
+    //         credentials: "include",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //           //accept: "application/json",
+    //         },
+    //       }
+    //     );
+
+    //     const data = await response.json();
+
+    //     if (!response.ok) {
+    //       throw {
+    //         ...data,
+    //         status: response.status,
+    //       };
+    //     }
+
+    //     if (!Array.isArray(data) || data.length === 0) {
+    //       writeLines(["No teams on leaderboard yet.", "<br>"]);
+    //       break;
+    //     }
+
+    //     // Create an array to store all lines
+    //     const allLines = ["Leaderboard:", "<br>", "<br>"];
+
+    //     // Add each team's information to the lines array
+    //     data.forEach((team: any, index: number) => {
+    //       allLines.push(
+    //         `<div style="margin-left: 10px; margin-bottom: 10px;">`,
+    //         `#${index + 1}. Team ${team.name}`,
+    //         "<br>",
+    //         `<div style="margin-left: 20px;">`,
+    //         `Score: ${team.score}`,
+    //         "<br>",
+    //         `Captain: ${team.lead?.fullName || "Unknown"}`,
+    //         "<br>",
+    //         `</div>`,
+    //         `</div>`
+    //       );
+    //     });
+
+    //     // Make a single writeLines call with all the content
+    //     writeLines(allLines);
+    //   } catch (error: unknown) {
+    //     console.error("Error:", error);
+
+    //     if (error && typeof error === "object" && "message" in error) {
+    //       const apiError = error as {
+    //         message: string;
+    //         error?: string;
+    //         statusCode?: number;
+    //       };
+    //       writeLines([
+    //         `Error ${apiError.statusCode || ""}: ${apiError.message}`,
+    //         apiError.error ? `(${apiError.error})` : "",
+    //         "<br>",
+    //       ]);
+    //     } else {
+    //       writeLines(["An unexpected error occurred", "<br>"]);
+    //     }
+    //   }
+
+    //   break;
+    // case "test":
+    //   if (bareMode) {
+    //     writeLines([`${command.username}`, "<br>"]);
+    //     break;
+    //   }
+
+    //   try {
+    //     const response = await fetch(
+    //       `https://api-production-6183.up.railway.app/`,
+    //       {
+    //         method: "GET",
+    //         credentials: "include",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //           //accept: "application/json",
+    //         },
+    //       }
+    //     );
+
+    //     if (!response.ok) {
+    //       const errorBody = await response.json();
+    //       throw new Error(
+    //         `${response.status}: ${errorBody.message || "Unknown error"}`
+    //       );
     //     }
     //   } catch (error: unknown) {
     //     console.error("Error:", error);
@@ -655,299 +605,253 @@ async function commandHandler(input: string) {
     //   }
     //   break;
 
-      interface TeamMember {
-        _id: string;
-        fullName: string;
-      }
+    // // case "send-mail":
+    // //   if (bareMode) {
+    // //     writeLines([`${command.username}`, "<br>"]);
+    // //     break;
+    // //   }
 
-    case "team":
-      if (bareMode) {
-        writeLines([`${command.username}`, "<br>"]);
-        break;
-      }
+    // //   try {
+    // //     console.log(EMAIL_INPUT)
+    // //     const response = await fetch(
+    // //       `https://api-production-6183.up.railway.app/auth/verify-email/init`,
+    // //       {
+    // //         method: "POST",
+    // //         credentials: "include",
+    // //         headers: {
+    // //           "Content-Type": "application/json",
+    // //           // "accept": "application/json",
+    // //         },
+    // //         // body: JSON.stringify({
+              
+    // //         // }),
+    // //       }
+    // //     );
 
-      try {
-        const response = await fetch(
-          `https://api-production-6183.up.railway.app/teams/my`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+    // //     if (!response.ok) {
+    // //       const errorBody = await response.json();
+    // //       throw new Error(
+    // //         `${response.status}: ${errorBody.message || "Unknown error"}`
+    // //       );
+    // //     } else {
+    // //       writeLines(["Mail sent !! now use the verify command", "<br>"]);
+    // //     }
+    // //   } catch (error: unknown) {
+    // //     console.error("Error:", error);
 
-        if (!response.ok) {
-          const errorBody = await response.json();
-          throw new Error(
-            `${response.status}: ${errorBody.message || "Unknown error"}`
-          );
-        }
-
-        const teamData = await response.json();
-
-        // Create array for all output lines
-        const outputLines = [
-          `Team name: ${teamData.name}`,
-          `Team score: ${teamData.score}`,
-          `Team UG: ${teamData.ug}`,
-          `Team join code: ${teamData.joinCode}`,
-          `Team lead name: ${teamData.lead.fullName}`,
-          "", // Empty line before members list
-          "Team members:",
-        ];
-
-        // Add team members
-        teamData.members.forEach((member: TeamMember) => {
-          outputLines.push(`- ${member.fullName}`);
-        });
-
-        // Add final line break
-        outputLines.push("<br>");
-
-        // Write all lines at once
-        writeLines(outputLines);
-      } catch (error: unknown) {
-        console.error("Error:", error);
-
-        if (error && typeof error === "object" && "message" in error) {
-          const apiError = error as {
-            message: string;
-            error?: string;
-            statusCode?: number;
-          };
-          writeLines([
-            `Error ${apiError.statusCode || ""}: ${apiError.message}`,
-            apiError.error ? `(${apiError.error})` : "",
-            "<br>",
-          ]);
-        } else {
-          writeLines(["An unexpected error occurred", "<br>"]);
-        }
-      }
-      break;
-    case "me":
-      if (bareMode) {
-        writeLines([`${command.username}`, "<br>"]);
-        break;
-      }
-
-      try {
-        const response = await fetch(
-          `https://api-production-6183.up.railway.app/auth/me`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              //accept: "application/json",
-            },
-          }
-        );
-
-        if (!response.ok) {
-          const errorBody = await response.json();
-          throw new Error(
-            `${response.status}: ${errorBody.message || "Unknown error"}`
-          );
-        }
-
-        const data = await response.json();
-
-        writeLines([
-          `Name: ${data.fullName}`,
-          `Email: ${data.email}`,
-          `UG: ${data.ug}`,
-          // `Team join code: ${data.joinCode}`,
-          // `Team lead name: ${data.lead.fullName}`,
-
-          "<br>",
-        ]);
-      } catch (error: unknown) {
-        console.error("Error:", error);
-
-        if (error && typeof error === "object" && "message" in error) {
-          const apiError = error as {
-            message: string;
-            error?: string;
-            statusCode?: number;
-          };
-          writeLines([
-            `Error ${apiError.statusCode || ""}: ${apiError.message}`,
-            apiError.error ? `(${apiError.error})` : "",
-            "<br>",
-          ]);
-        } else {
-          writeLines(["An unexpected error occurred", "<br>"]);
-        }
-      }
-      break;
-
-    // case "about":
-    //   if (bareMode) {
-    //     writeLines(["Nothing to see here.", "<br>"]);
-    //     break;
-    //   }
-    //   writeLines(ABOUT);
-    //   break;
-    case "rules":
-      if (bareMode) {
-        writeLines(["Nothing to see here.", "<br>"]);
-        break;
-      }
-      writeLines(RULE);
-      break;
-    case "lore":
-      if (bareMode) {
-        writeLines(["The ancient scrolls are hidden from view.", "<br>"]);
-        break;
-      }
-      writeLines(LORE);
-      break;
-
-    // case "projects":
-    //   if (bareMode) {
-    //     writeLines(["I don't want you to break the other projects.", "<br>"]);
-    //     break;
-    //   }
-    // //   writeLines(PROJECTS);
+    // //     if (error && typeof error === "object" && "message" in error) {
+    // //       const apiError = error as {
+    // //         message: string;
+    // //         error?: string;
+    // //         statusCode?: number;
+    // //       };
+    // //       writeLines([
+    // //         `Error ${apiError.statusCode || ""}: ${apiError.message}`,
+    // //         apiError.error ? `(${apiError.error})` : "",
+    // //         "<br>",
+    // //       ]);
+    // //     } else {
+    // //       writeLines(["An unexpected error occurred", "<br>"]);
+    // //     }
+    // //   }
     // //   break;
-    // case "achievements":
-    //   if (bareMode) {
-    //     writeLines(["I don't want you to break the other things.", "<br>"]);
-    //     break;
-    //   }
-    //   writeLines(ACHIEVEMENTS);
-    //   break;
-    // case "s/github":
-    //   writeLines(["Redirecting to github.com...", "<br>"]);
-    //   setTimeout(() => {
-    //     window.open(GIT_LINK, "_blank");
-    //   }, 500);
-    //   break;
-    // case "hackme":
-    //   if (bareMode) {
-    //     writeLines(["Nothing to see here.", "<br>"]);
-    //     break;
-    //   }
-    //   writeLines(Hackme);
-    //   break;
-    // case "neko":
-    //   if (bareMode) {
-    //     writeLines(["Nothing to see here.", "<br>"]);
-    //     break;
-    //   }
-    //   writeLines(Neko);
-    //   break;
-    // case "s/linkedin":
-    //   writeLines(["Redirecting to linkedin...", "<br>"]);
-    //   setTimeout(() => {
-    //     window.open(LINKEDIN_LINK, "_blank");
-    //   }, 500);
-    //   break;
-    // case "s/discord":
-    //   writeLines(["Redirecting to discord...", "<br>"]);
-    //   setTimeout(() => {
-    //     window.open(DISCORD_LINK, "_blank");
-    //   }, 500);
-    //   break;
-    // case "s/instagram":
-    //   writeLines(["Redirecting to instagram...", "<br>"]);
-    //   setTimeout(() => {
-    //     window.open(INSTAGRAM_LINK, "_blank");
-    //   }, 500);
-    //   break;
-    // case "s/gcloud":
-    //   writeLines(["Redirecting to google cloud profile...", "<br>"]);
-    //   setTimeout(() => {
-    //     window.open(GCLOUD_LINK, "_blank");
-    //   }, 500);
-    //   break;
-    // case "s/gdeveloper":
-    //   writeLines(["Redirecting to google developer profile...", "<br>"]);
-    //   setTimeout(() => {
-    //     window.open(GPROFILE_LINK, "_blank");
-    //   }, 500);
-    //   break;
-    // case "s/unity":
-    //   writeLines(["Redirecting to unity learn profile...", "<br>"]);
-    //   setTimeout(() => {
-    //     window.open(UNITY_LINK, "_blank");
-    //   }, 500);
-    //   break;
 
-    // case "s/email":
-    //   writeLines(["Redirecting to email...", "<br>"]);
-    //   setTimeout(() => {
-    //     window.open(EMAIL_LINK, "_blank");
-    //   }, 500);
-    //   break;
+    //   interface TeamMember {
+    //     _id: string;
+    //     fullName: string;
+    //   }
 
-    // case "rm -rf":
+    // case "team":
     //   if (bareMode) {
-    //     writeLines(["don't try again.", "<br>"]);
+    //     writeLines([`${command.username}`, "<br>"]);
     //     break;
     //   }
 
-    //   if (isSudo) {
+    //   try {
+    //     const response = await fetch(
+    //       `https://api-production-6183.up.railway.app/teams/my`,
+    //       {
+    //         method: "GET",
+    //         credentials: "include",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     );
+
+    //     if (!response.ok) {
+    //       const errorBody = await response.json();
+    //       throw new Error(
+    //         `${response.status}: ${errorBody.message || "Unknown error"}`
+    //       );
+    //     }
+
+    //     const teamData = await response.json();
+
+    //     // Create array for all output lines
+    //     const outputLines = [
+    //       `Team name: ${teamData.name}`,
+    //       `Team score: ${teamData.score}`,
+    //       `Team UG: ${teamData.ug}`,
+    //       `Team join code: ${teamData.joinCode}`,
+    //       `Team lead name: ${teamData.lead.fullName}`,
+    //       "", // Empty line before members list
+    //       "Team members:",
+    //     ];
+
+    //     // Add team members
+    //     teamData.members.forEach((member: TeamMember) => {
+    //       outputLines.push(`- ${member.fullName}`);
+    //     });
+
+    //     // Add final line break
+    //     outputLines.push("<br>");
+
+    //     // Write all lines at once
+    //     writeLines(outputLines);
+    //   } catch (error: unknown) {
+    //     console.error("Error:", error);
+
+    //     if (error && typeof error === "object" && "message" in error) {
+    //       const apiError = error as {
+    //         message: string;
+    //         error?: string;
+    //         statusCode?: number;
+    //       };
+    //       writeLines([
+    //         `Error ${apiError.statusCode || ""}: ${apiError.message}`,
+    //         apiError.error ? `(${apiError.error})` : "",
+    //         "<br>",
+    //       ]);
+    //     } else {
+    //       writeLines(["An unexpected error occurred", "<br>"]);
+    //     }
+    //   }
+    //   break;
+    // case "me":
+    //   if (bareMode) {
+    //     writeLines([`${command.username}`, "<br>"]);
+    //     break;
+    //   }
+
+    //   try {
+    //     const response = await fetch(
+    //       `https://api-production-6183.up.railway.app/auth/me`,
+    //       {
+    //         method: "GET",
+    //         credentials: "include",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //           //accept: "application/json",
+    //         },
+    //       }
+    //     );
+
+    //     if (!response.ok) {
+    //       const errorBody = await response.json();
+    //       throw new Error(
+    //         `${response.status}: ${errorBody.message || "Unknown error"}`
+    //       );
+    //     }
+
+    //     const data = await response.json();
+
     //     writeLines([
-    //       "Usage: <span class='command'>'rm -rf &lt;dir&gt;'</span>",
+    //       `Name: ${data.fullName}`,
+    //       `Email: ${data.email}`,
+    //       `UG: ${data.ug}`,
+    //       // `Team join code: ${data.joinCode}`,
+    //       // `Team lead name: ${data.lead.fullName}`,
+
     //       "<br>",
     //     ]);
-    //   } else {
-    //     writeLines(["Permission not granted.", "<br>"]);
+    //   } catch (error: unknown) {
+    //     console.error("Error:", error);
+
+    //     if (error && typeof error === "object" && "message" in error) {
+    //       const apiError = error as {
+    //         message: string;
+    //         error?: string;
+    //         statusCode?: number;
+    //       };
+    //       writeLines([
+    //         `Error ${apiError.statusCode || ""}: ${apiError.message}`,
+    //         apiError.error ? `(${apiError.error})` : "",
+    //         "<br>",
+    //       ]);
+    //     } else {
+    //       writeLines(["An unexpected error occurred", "<br>"]);
+    //     }
     //   }
     //   break;
 
-    case "register":
-      if (bareMode) {
-        writeLines(["no.", "<br>"]);
-        break;
-      }
-      if (!EMAIL) return;
-      isEmailInput = true;
-      USERINPUT.disabled = true;
+    // case "rules":
+    //   if (bareMode) {
+    //     writeLines(["Nothing to see here.", "<br>"]);
+    //     break;
+    //   }
+    //   writeLines(RULE);
+    //   break;
+    // case "lore":
+    //   if (bareMode) {
+    //     writeLines(["The ancient scrolls are hidden from view.", "<br>"]);
+    //     break;
+    //   }
+    //   writeLines(LORE);
+    //   break;
 
-      if (INPUT_HIDDEN) INPUT_HIDDEN.style.display = "none";
-      EMAIL.style.display = "block";
-      setTimeout(() => {
-        EMAIL_INPUT.focus();
-      }, 100);
+  
+    // case "register":
+    //   if (bareMode) {
+    //     writeLines(["no.", "<br>"]);
+    //     break;
+    //   }
+    //   if (!EMAIL) return;
+    //   isEmailInput = true;
+    //   USERINPUT.disabled = true;
 
-      break;
+    //   if (INPUT_HIDDEN) INPUT_HIDDEN.style.display = "none";
+    //   EMAIL.style.display = "block";
+    //   setTimeout(() => {
+    //     EMAIL_INPUT.focus();
+    //   }, 100);
+
+    //   break;
 
 
-    case "login":
-      if (bareMode) {
-        writeLines(["no.", "<br>"]);
-        break;
-      }
-      islogin = 1;
-      if (!EMAIL) return;
-      isEmailInput = true;
-      USERINPUT.disabled = true;
+    // case "login":
+    //   if (bareMode) {
+    //     writeLines(["no.", "<br>"]);
+    //     break;
+    //   }
+    //   islogin = 1;
+    //   if (!EMAIL) return;
+    //   isEmailInput = true;
+    //   USERINPUT.disabled = true;
 
-      if (INPUT_HIDDEN) INPUT_HIDDEN.style.display = "none";
-      EMAIL.style.display = "block";
-      setTimeout(() => {
-        EMAIL_INPUT.focus();
-      }, 100);
+    //   if (INPUT_HIDDEN) INPUT_HIDDEN.style.display = "none";
+    //   EMAIL.style.display = "block";
+    //   setTimeout(() => {
+    //     EMAIL_INPUT.focus();
+    //   }, 100);
 
-      break;
+    //   break;
 
-    case "create-team":
-      if (!TEAM) return;
-      isTeamInput = true;
-      USERINPUT.disabled = true;
+    // case "create-team":
+    //   if (!TEAM) return;
+    //   isTeamInput = true;
+    //   USERINPUT.disabled = true;
 
-      if (INPUT_HIDDEN) INPUT_HIDDEN.style.display = "none";
-      TEAM.style.display = "block";
-      setTimeout(() => {
-        TEAM_INPUT.focus();
-      }, 100);
+    //   if (INPUT_HIDDEN) INPUT_HIDDEN.style.display = "none";
+    //   TEAM.style.display = "block";
+    //   setTimeout(() => {
+    //     TEAM_INPUT.focus();
+    //   }, 100);
 
-      break;
+    //   break;
+
+
+    //not required
 
     // case "verify":
     //   if (!TOKEN) return;
@@ -962,98 +866,64 @@ async function commandHandler(input: string) {
 
     //   break;
 
-    case "submit":
-      if (!CHALLENGEID) return;
-      isChallengeidInput = true;
-      USERINPUT.disabled = true;
-
-      if (INPUT_HIDDEN) INPUT_HIDDEN.style.display = "none";
-      CHALLENGEID.style.display = "block";
-      setTimeout(() => {
-        CHALLENGEID_INPUT.focus();
-      }, 100);
-
-      break;
-
-    case "join-team":
-      if (!TID) return;
-      isTidInput = true;
-      USERINPUT.disabled = true;
-
-      if (INPUT_HIDDEN) INPUT_HIDDEN.style.display = "none";
-      TID.style.display = "block";
-      setTimeout(() => {
-        TID_INPUT.focus();
-      }, 100);
-
-      break;
-
-    case "logout":
-      try {
-        const response = await fetch(
-          `https://api-production-6183.up.railway.app/auth/logout`,
-          {
-            method: "DELETE",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              //accept: "application/json",
-            },
-          }
-        );
-
-        if (!response.ok) {
-          const errorBody = await response.json();
-          throw new Error(
-            `${response.status}: ${errorBody.message || "Logout failed"}`
-          );
-        }
-
-        writeLines(["Successfully logged out!", "<br>"]);
-      } catch (error: unknown) {
-        let errorMessage = "Error during logout";
-
-        if (error instanceof Error) {
-          errorMessage = error.message;
-        }
-
-        writeLines([`Error: ${errorMessage}`, "<br>"]);
-      }
-      break;
-
-    // case "sudo":
-    //   if (bareMode) {
-    //     writeLines(["no.", "<br>"]);
-    //     break;
-    //   }
-    //   if (!PASSWORD) return;
-    //   isPasswordInput = true;
+    // case "submit":
+    //   if (!CHALLENGEID) return;
+    //   isChallengeidInput = true;
     //   USERINPUT.disabled = true;
 
     //   if (INPUT_HIDDEN) INPUT_HIDDEN.style.display = "none";
-    //   PASSWORD.style.display = "block";
+    //   CHALLENGEID.style.display = "block";
     //   setTimeout(() => {
-    //     PASSWORD_INPUT.focus();
+    //     CHALLENGEID_INPUT.focus();
     //   }, 100);
 
     //   break;
 
-    // case "p/insiiits":
+    // case "join-team":
+    //   if (!TID) return;
+    //   isTidInput = true;
+    //   USERINPUT.disabled = true;
+
+    //   if (INPUT_HIDDEN) INPUT_HIDDEN.style.display = "none";
+    //   TID.style.display = "block";
+    //   setTimeout(() => {
+    //     TID_INPUT.focus();
+    //   }, 100);
+
     //   break;
 
-    // case "ls":
-    //   if (bareMode) {
-    //     writeLines(["", "<br>"]);
-    //     break;
-    //   }
+    // case "logout":
+    //   try {
+    //     const response = await fetch(
+    //       `https://api-production-6183.up.railway.app/auth/logout`,
+    //       {
+    //         method: "DELETE",
+    //         credentials: "include",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //           //accept: "application/json",
+    //         },
+    //       }
+    //     );
 
-    //   if (isSudo) {
-    //     writeLines(["src", "<br>"]);
-    //   } else {
-    //     writeLines(["Permission not granted.", "<br>"]);
+    //     if (!response.ok) {
+    //       const errorBody = await response.json();
+    //       throw new Error(
+    //         `${response.status}: ${errorBody.message || "Logout failed"}`
+    //       );
+    //     }
+
+    //     writeLines(["Successfully logged out!", "<br>"]);
+    //   } catch (error: unknown) {
+    //     let errorMessage = "Error during logout";
+
+    //     if (error instanceof Error) {
+    //       errorMessage = error.message;
+    //     }
+
+    //     writeLines([`Error: ${errorMessage}`, "<br>"]);
     //   }
     //   break;
-
 
     default:
       if (input.startsWith("p/")) {
