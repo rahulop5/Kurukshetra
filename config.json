@@ -8,11 +8,9 @@
     "╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝"
     
   ],
-  "rules": "1. Each team must comprise exactly 3 members with at least 1 boy",
-  "rules1": "2. Do not disclose keys or discuss solutions with other teams",
-  "rules2": "3. Respect the temporal boundaries - no cheating or external help",
-  "rules3": "4. The first three teams to complete all nodes become Temporal Champions",
-  "rules4": "5. All decisions by the Guardians are final",
+  "rules": "1. Each team can have 4 members maximum",
+  "rules3": "2. The first three teams to complete all nodes become Temporal Champions",
+  "rules4": "3. All decisions by the Guardians are final",
 
   "rule5": "rules",
 

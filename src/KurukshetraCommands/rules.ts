@@ -18,8 +18,8 @@ const createRules = () : string[] => {
   about.push("═══ NEXUS TREASURE HUNT RULES ═══");
   about.push("<br>");
   about.push(command.rules);
-  about.push(command.rules1);
-  about.push(command.rules2);
+  // about.push(command.rules1);
+  // about.push(command.rules2);
   about.push(command.rules3);
   about.push(command.rules4);
   
