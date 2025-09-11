@@ -798,13 +798,15 @@ async function commandHandler(input: string) {
       }
       writeLines(RULE);
       break;
-    case "lore":
-      if (bareMode) {
-        writeLines(["The ancient scrolls are hidden from view.", "<br>"]);
-        break;
-      }
-      writeLines(LORE);
-      break;
+
+
+      // case "lore":
+      // if (bareMode) {
+      //   writeLines(["The ancient scrolls are hidden from view.", "<br>"]);
+      //   break;
+      // }
+      // writeLines(LORE);
+      // break;
 
     // case "projects":
     //   if (bareMode) {
