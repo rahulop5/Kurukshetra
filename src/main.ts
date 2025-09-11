@@ -10,7 +10,7 @@ import { HELP } from "./commands/help";
 // import { Neko } from "./commands/neko";
 
 import { RULE } from "./KurukshetraCommands/rules";
-import { LORE } from "./KurukshetraCommands/lore";
+// import { LORE } from "./KurukshetraCommands/lore";
 
 // Get base URL from environment variables or use localhost as fallback
 //const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:7878';
